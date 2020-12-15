@@ -1,10 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 
+const notesReducer = (state, action) => {
+  switch( action.type ) {
+    case 'POPULATE_NOTES':
+      return action.notes; 
+    case 'ADD_NOTE':
+        return [
+          ...state, 
+          { title: action.title, body: action.body }
+        ]
+    case 'REMOVE_NOTE':
+      return state.filter( (note) => note.title !== action.title );
+    default: 
+      return state;
+  }
+};
+
 const NoteApp = () => {
 
-  let [notes, setNotes] = useState([]);
+  // Pass the reducer and the initial state
+  const [notes, dispatch] = useReducer(notesReducer, [] );
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
@@ -18,26 +35,20 @@ const NoteApp = () => {
 
   const addNote = (e) => {
     e.preventDefault();
-    setNotes( [
-      ...notes,
-      {
-        title,
-        body
-      }
-    ] );
+    dispatch( { type: 'ADD_NOTE', title, body } );
     setTitle('');
     setBody('');
   };
   
   const removeNote = (title) => {
-    setNotes( notes.filter( (note) => (note.title !== title) ));
+    dispatch( { type: 'REMOVE_NOTE', title } );
   };
 
   // Use this pattern if fetching data from a database. Use a promise or a callback!
   useEffect( () => {
-    const notesData = JSON.parse(localStorage.getItem('notes'));
-    if( notesData) {
-      setNotes(notesData);
+    const notes = JSON.parse(localStorage.getItem('notes'));
+    if( notes ) {
+      dispatch( { type: 'POPULATE_NOTES', notes } );
     }
   }, [] );
 
@@ -64,7 +75,7 @@ const NoteApp = () => {
 
 };
 
-const Note = ( {note, removeNote}) => {
+const Note = ( {note, removeNote} ) => {
 
   useEffect( () => {
     console.log('Setting up effect'); 
