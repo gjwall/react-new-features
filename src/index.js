@@ -50,11 +50,7 @@ const NoteApp = () => {
       <h1>Notes</h1> 
       {
         notes.map( (note) => (
-          <div key={note.title}>
-            <h3>{note.title}</h3>
-            <p>{note.body}</p>
-            <button onClick={() => removeNote(note.title)}>Remove note</button>
-          </div>
+          <Note key={note.title} note={note} removeNote={removeNote} />
         ))
       }
       <p>Add note</p>
@@ -68,53 +64,72 @@ const NoteApp = () => {
 
 };
 
-const App = (props) => {
+const Note = ( {note, removeNote}) => {
 
-  const [ count, setCount ] = useState(props.count);
-  const [ text, setText ] = useState('');
-
-  // Doing the below causes this to run once 
   useEffect( () => {
-    console.log('This should only run once!');
+    console.log('Setting up effect'); 
+
+    return () => {
+      console.log('Cleaning up effect');
+    }
   }, [] );
-
-  // Only run the following when count changes, prevent too much running
-  useEffect( () => {
-    console.log('in use effect');
-    document.title = count; 
-  }, [count] );
-
-  const increment = () => {
-    setCount(count + 1);
-  };
-
-  const decrement = () => {
-    setCount(count - 1);
-  };
-
-  const reset = () => {
-    setCount(0);
-  };
-
-  const inputChange = (e) => {
-    setText(e.target.value);
-  };
 
   return (
     <div>
-      <p>The current {text|| 'count'} is {count}</p>
-      <button onClick={increment}>+1</button>
-      <button onClick={() => setCount(count + 1)}>+1 again</button>
-      <button onClick={decrement}>-1</button>
-      <button onClick={reset}>Reset</button>
-      <input value={text} onChange={inputChange} /> 
+      <h3>{note.title}</h3>
+      <p>{note.body}</p>
+      <button onClick={() => removeNote(note.title)}>Remove note</button>
     </div>
-  );
+  )
 };
 
-App.defaultProps = {
-  count: 0
-}
+// const App = (props) => {
+
+//   const [ count, setCount ] = useState(props.count);
+//   const [ text, setText ] = useState('');
+
+//   // Doing the below causes this to run once 
+//   useEffect( () => {
+//     console.log('This should only run once!');
+//   }, [] );
+
+//   // Only run the following when count changes, prevent too much running
+//   useEffect( () => {
+//     console.log('in use effect');
+//     document.title = count; 
+//   }, [count] );
+
+//   const increment = () => {
+//     setCount(count + 1);
+//   };
+
+//   const decrement = () => {
+//     setCount(count - 1);
+//   };
+
+//   const reset = () => {
+//     setCount(0);
+//   };
+
+//   const inputChange = (e) => {
+//     setText(e.target.value);
+//   };
+
+//   return (
+//     <div>
+//       <p>The current {text|| 'count'} is {count}</p>
+//       <button onClick={increment}>+1</button>
+//       <button onClick={() => setCount(count + 1)}>+1 again</button>
+//       <button onClick={decrement}>-1</button>
+//       <button onClick={reset}>Reset</button>
+//       <input value={text} onChange={inputChange} /> 
+//     </div>
+//   );
+// };
+
+// App.defaultProps = {
+//   count: 0
+// }
 
 ReactDOM.render(
   <React.StrictMode>
