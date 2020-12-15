@@ -4,8 +4,7 @@ import reportWebVitals from './reportWebVitals';
 
 const NoteApp = () => {
 
-  const notesData = JSON.parse(localStorage.getItem('notes'));
-  const [notes, setNotes] = useState(notesData|| []);
+  let [notes, setNotes] = useState([]);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
@@ -34,9 +33,17 @@ const NoteApp = () => {
     setNotes( notes.filter( (note) => (note.title !== title) ));
   };
 
+  // Use this pattern if fetching data from a database. Use a promise or a callback!
+  useEffect( () => {
+    const notesData = JSON.parse(localStorage.getItem('notes'));
+    if( notesData) {
+      setNotes(notesData);
+    }
+  }, [] );
+
   useEffect( () => {
     localStorage.setItem('notes', JSON.stringify(notes));
-  });
+  }, [notes] );
   
   return (
     <div>
@@ -61,47 +68,53 @@ const NoteApp = () => {
 
 };
 
-// const App = (props) => {
+const App = (props) => {
 
-//   const [ count, setCount ] = useState(props.count);
-//   const [ text, setText ] = useState('');
+  const [ count, setCount ] = useState(props.count);
+  const [ text, setText ] = useState('');
 
-//   useEffect( () => {
-//     // console.log('in use effect');
-//     document.title = count; 
-//   });
+  // Doing the below causes this to run once 
+  useEffect( () => {
+    console.log('This should only run once!');
+  }, [] );
 
-//   const increment = () => {
-//     setCount(count + 1);
-//   };
+  // Only run the following when count changes, prevent too much running
+  useEffect( () => {
+    console.log('in use effect');
+    document.title = count; 
+  }, [count] );
 
-//   const decrement = () => {
-//     setCount(count - 1);
-//   };
+  const increment = () => {
+    setCount(count + 1);
+  };
 
-//   const reset = () => {
-//     setCount(0);
-//   };
+  const decrement = () => {
+    setCount(count - 1);
+  };
 
-//   const inputChange = (e) => {
-//     setText(e.target.value);
-//   };
+  const reset = () => {
+    setCount(0);
+  };
 
-//   return (
-//     <div>
-//       <p>The current {text|| 'count'} is {count}</p>
-//       <button onClick={increment}>+1</button>
-//       <button onClick={() => setCount(count + 1)}>+1 again</button>
-//       <button onClick={decrement}>-1</button>
-//       <button onClick={reset}>Reset</button>
-//       <input value={text} onChange={inputChange} /> 
-//     </div>
-//   );
-// };
+  const inputChange = (e) => {
+    setText(e.target.value);
+  };
 
-// App.defaultProps = {
-//   count: 0
-// }
+  return (
+    <div>
+      <p>The current {text|| 'count'} is {count}</p>
+      <button onClick={increment}>+1</button>
+      <button onClick={() => setCount(count + 1)}>+1 again</button>
+      <button onClick={decrement}>-1</button>
+      <button onClick={reset}>Reset</button>
+      <input value={text} onChange={inputChange} /> 
+    </div>
+  );
+};
+
+App.defaultProps = {
+  count: 0
+}
 
 ReactDOM.render(
   <React.StrictMode>
