@@ -23,6 +23,7 @@ const AddNoteForm = () => {
         setBody('');
     };
 
+    // To use a fragment replace <div> with <> and </div> with </>
     return (
         <div>
             <p>Add note</p>
