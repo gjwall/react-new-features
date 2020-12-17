@@ -1,5 +1,6 @@
-import React,  { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import NotesContext from './../context/notes-context';
+import useMousePosition from './../hooks/useMousePosition';
 
 const AddNoteForm = () => {
 
@@ -7,6 +8,7 @@ const AddNoteForm = () => {
 
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
+    const position = useMousePosition();
 
     const changeTitle = (e) => {
         setTitle(e.target.value);
@@ -26,7 +28,7 @@ const AddNoteForm = () => {
     // To use a fragment replace <div> with <> and </div> with </>
     return (
         <div>
-            <p>Add note</p>
+            <p>Add note {position.x} - {position.y}</p>
             <form onSubmit={addNote}>
             <input value={title} onChange={changeTitle} />
             <textarea value={body} onChange={changeBody}></textarea>
